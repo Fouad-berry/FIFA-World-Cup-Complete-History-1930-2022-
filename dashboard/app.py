@@ -27,6 +27,40 @@ BASE_DIR = pathlib.Path(__file__).parent.parent.resolve()
 DATA_PATH = BASE_DIR / 'data/processed/FIFA_World_Cup_Results_CLEAN.csv'
 df = pd.read_csv(DATA_PATH)
 
+FLAGS_PATH = BASE_DIR / 'data/raw/flags_iso.csv'
+
+FLAG_NAME_FIX = {
+    "England": "United Kingdom of Great Britain and Northern Ireland (the)",
+    "South Korea": "Korea (the Republic of)",
+    "North Korea": "Korea (the Democratic People's Republic of)",
+    "USA": "United States of America (the)",
+    "United States": "United States of America (the)",
+    "Iran": "Iran (Islamic Republic of)",
+    "Russia": "Russian Federation (the)",
+    "Czech Republic": "Czechia",
+    "Ivory Coast": "Côte d'Ivoire",
+    "Netherlands": "Netherlands (the)",
+}
+
+flags = pd.read_csv(FLAGS_PATH)
+
+def add_flag_column(df, country_col):
+    merged = df.reset_index()
+    merged.columns = [country_col, 'count']
+    merged[country_col] = merged[country_col].replace(FLAG_NAME_FIX)
+    merged = merged.merge(flags[['Country', 'URL']], left_on=country_col, right_on='Country', how='left')
+    merged['flag'] = merged['URL'].apply(lambda url: f"<img src='{url}' width='24'> " if pd.notnull(url) else "")
+    merged['display'] = merged['flag'] + merged[country_col].astype(str)
+    merged = merged.rename(columns={'display': 'Pays'})
+    return merged[['Pays', 'count']]
+
+def show_table_with_flags(df, country_col):
+    merged = add_flag_column(df, country_col)
+    st.markdown(
+        merged.to_html(header=['Pays', 'Count'], index=False, escape=False),
+        unsafe_allow_html=True
+    )
+
 tab1, tab2, tab3, tab4, tab5, tab6 = st.tabs([
 	"🏆 Top 5 Gagnants",
 	"🌍 Top 3 Hôtes",
@@ -67,7 +101,7 @@ def plotly_doughnut(labels, values, title=None):
 with tab1:
 	st.header("Top 5 des équipes qui ont le plus gagné")
 	winners = analysis.top_5_winners(df)
-	show_table(winners)
+	show_table_with_flags(winners, 'Winner')
 	col1, col2, col3 = st.columns([1,2,1])
 	with col2:
 		fig = plotly_doughnut(winners.index, winners.values, title="Top 5 Gagnants")
@@ -76,7 +110,7 @@ with tab1:
 with tab2:
 	st.header("Top 3 des pays hôtes")
 	hosts = analysis.top_3_hosts(df)
-	show_table(hosts)
+	show_table_with_flags(hosts, 'Host')
 	col1, col2, col3 = st.columns([1,2,1])
 	with col2:
 		fig = plotly_doughnut(hosts.index, hosts.values, title="Top 3 Hôtes")
@@ -85,7 +119,7 @@ with tab2:
 with tab3:
 	st.header("Top 5 des pays qui ont accueillis ET gagné la même année")
 	host_win = analysis.top_5_host_and_win(df)
-	show_table(host_win)
+	show_table_with_flags(host_win, 'Host')
 	col1, col2, col3 = st.columns([1,2,1])
 	with col2:
 		fig = plotly_doughnut(host_win.index, host_win.values, title="Top 5 Hôtes & Gagnants")
@@ -94,7 +128,7 @@ with tab3:
 with tab4:
 	st.header("Top 3 des pays qui ont fini à la 2ème place")
 	runner_up = analysis.top_3_runner_up(df)
-	show_table(runner_up)
+	show_table_with_flags(runner_up, 'Runner_Up')
 	col1, col2, col3 = st.columns([1,2,1])
 	with col2:
 		fig = plotly_doughnut(runner_up.index, runner_up.values, title="Top 3 2ème place")
@@ -103,7 +137,7 @@ with tab4:
 with tab5:
 	st.header("Top 3 des pays qui ont gagné la finale avec au moins 3 buts d'écart")
 	big_wins = analysis.top_3_biggest_final_wins(df)
-	show_table(big_wins)
+	show_table_with_flags(big_wins, 'Winner')
 	col1, col2, col3 = st.columns([1,2,1])
 	with col2:
 		fig = plotly_doughnut(big_wins.index, big_wins.values, title="Top 3 victoires 3+ buts")
@@ -112,7 +146,7 @@ with tab5:
 with tab6:
 	st.header("Tout les pays qui ont gagné la finale sans aller en Penalty")
 	no_pen = analysis.top_win_no_penalty(df)
-	show_table(no_pen)
+	show_table_with_flags(no_pen, 'Winner')
 	col1, col2, col3 = st.columns([1,2,1])
 	with col2:
 		fig = plotly_doughnut(no_pen.index, no_pen.values, title="Tout les pays qui ont gagné sans penalty")
