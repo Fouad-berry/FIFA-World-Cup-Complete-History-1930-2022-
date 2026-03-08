@@ -40,11 +40,12 @@ def show_table(data):
     st.dataframe(
         data,
         column_config={
-            "count": st.column_config.NumberColumn("count", width="small")
+            "Winner": st.column_config.TextColumn(width="medium"),
+            "count": st.column_config.NumberColumn(width="small")
         },
-        use_container_width=False
+        use_container_width=False,
     )
-
+    
 def plotly_doughnut(labels, values, title=None):
 	fig = px.pie(
 		names=labels,
@@ -82,12 +83,12 @@ with tab2:
 		st.plotly_chart(fig, width='content')
 
 with tab3:
-	st.header("Top 3 des pays qui ont host ET gagné la même année")
+	st.header("Top 3 des pays qui ont accueillis ET gagné la même année")
 	host_win = analysis.top_3_host_and_win(df)
 	show_table(host_win)
 	col1, col2, col3 = st.columns([1,2,1])
 	with col2:
-		fig = plotly_doughnut(host_win.index, host_win.values, title="Top 3 Host & Win")
+		fig = plotly_doughnut(host_win.index, host_win.values, title="Top 3 Hôtes & Gagnants")
 		st.plotly_chart(fig, width='content')
 
 with tab4:
