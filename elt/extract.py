@@ -1,1 +1,5 @@
-# extraction du dataset (à compléter après ajout du fichier)
+import pandas as pd
+
+def extract_data(path):
+	df = pd.read_csv(path)
+	return df

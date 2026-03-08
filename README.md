@@ -20,14 +20,29 @@ Ce projet propose un tableau de bord interactif pour explorer les données de la
 
 ## Lancement local
 
-1. Installer les dépendances :
+1. (Recommandé) Créer et activer un environnement virtuel :
+   ```bash
+   python3 -m venv venv
+   source venv/bin/activate
+   ```
+
+
+2. Installer les dépendances :
    ```bash
    pip install -r requirements.txt
    ```
-2. Lancer l'app :
+
+3. Générer le fichier de données nettoyé (obligatoire avant de lancer le dashboard) :
+   ```bash
+   python elt/transform.py
+   ```
+
+4. Lancer le dashboard Streamlit :
    ```bash
    streamlit run dashboard/app.py
    ```
+
+5. Ouvre le lien affiché dans le terminal (généralement http://localhost:8501) dans ton navigateur.
 
 ## Déploiement Netlify
 Voir instructions dans le README ou le dashboard.
