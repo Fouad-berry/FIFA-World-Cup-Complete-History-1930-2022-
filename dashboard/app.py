@@ -83,12 +83,12 @@ with tab2:
 		st.plotly_chart(fig, width='content')
 
 with tab3:
-	st.header("Top 3 des pays qui ont accueillis ET gagné la même année")
-	host_win = analysis.top_3_host_and_win(df)
+	st.header("Top 5 des pays qui ont accueillis ET gagné la même année")
+	host_win = analysis.top_5_host_and_win(df)
 	show_table(host_win)
 	col1, col2, col3 = st.columns([1,2,1])
 	with col2:
-		fig = plotly_doughnut(host_win.index, host_win.values, title="Top 3 Hôtes & Gagnants")
+		fig = plotly_doughnut(host_win.index, host_win.values, title="Top 5 Hôtes & Gagnants")
 		st.plotly_chart(fig, width='content')
 
 with tab4:
@@ -110,10 +110,10 @@ with tab5:
 		st.plotly_chart(fig, width='content')
 
 with tab6:
-	st.header("Top 3 des pays qui ont gagné la finale sans aller en Penalty")
-	no_pen = analysis.top_3_win_no_penalty(df)
+	st.header("Tout les pays qui ont gagné la finale sans aller en Penalty")
+	no_pen = analysis.top_win_no_penalty(df)
 	show_table(no_pen)
 	col1, col2, col3 = st.columns([1,2,1])
 	with col2:
-		fig = plotly_doughnut(no_pen.index, no_pen.values, title="Top 3 sans penalty")
+		fig = plotly_doughnut(no_pen.index, no_pen.values, title="Tout les pays qui ont gagné sans penalty")
 		st.plotly_chart(fig, width='content')
