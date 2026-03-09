@@ -99,19 +99,21 @@ def plotly_doughnut(labels, values, title=None):
 	return fig
 
 with tab1:
-	st.header("Top 5 des équipes qui ont le plus gagné")
-	winners = analysis.top_5_winners(df)
-	show_table_with_flags(winners, 'Winner')
-	col1, col2, col3 = st.columns([1,2,1])
-	with col2:
-		fig = plotly_doughnut(winners.index, winners.values, title="Top 5 Gagnants")
-		st.plotly_chart(fig, width='content')
-
+    st.header("Top 5 des équipes qui ont le plus gagné")
+    winners = analysis.top_5_winners(df)
+    col1, col2 = st.columns([1,2])
+    with col1:
+        show_table_with_flags(winners, 'Winner')
+    with col2:
+        fig = plotly_doughnut(winners.index, winners.values, title="Top 5 Gagnants")
+        st.plotly_chart(fig, width='content')
+        
 with tab2:
 	st.header("Top 3 des pays hôtes")
 	hosts = analysis.top_3_hosts(df)
-	show_table_with_flags(hosts, 'Host')
-	col1, col2, col3 = st.columns([1,2,1])
+	col1, col2 = st.columns([1,2])
+	with col1:
+		show_table_with_flags(hosts, 'Host')
 	with col2:
 		fig = plotly_doughnut(hosts.index, hosts.values, title="Top 3 Hôtes")
 		st.plotly_chart(fig, width='content')
@@ -119,8 +121,9 @@ with tab2:
 with tab3:
 	st.header("Top 5 des pays qui ont accueillis ET gagné la même année")
 	host_win = analysis.top_5_host_and_win(df)
-	show_table_with_flags(host_win, 'Host')
-	col1, col2, col3 = st.columns([1,2,1])
+	col1, col2 = st.columns([1,2])
+	with col1:
+		show_table_with_flags(host_win, 'Host')
 	with col2:
 		fig = plotly_doughnut(host_win.index, host_win.values, title="Top 5 Hôtes & Gagnants")
 		st.plotly_chart(fig, width='content')
@@ -128,8 +131,9 @@ with tab3:
 with tab4:
 	st.header("Top 3 des pays qui ont fini à la 2ème place")
 	runner_up = analysis.top_3_runner_up(df)
-	show_table_with_flags(runner_up, 'Runner_Up')
-	col1, col2, col3 = st.columns([1,2,1])
+	col1, col2 = st.columns([1,2])
+	with col1:
+		show_table_with_flags(runner_up, 'Runner_Up')
 	with col2:
 		fig = plotly_doughnut(runner_up.index, runner_up.values, title="Top 3 2ème place")
 		st.plotly_chart(fig, width='content')
@@ -137,8 +141,9 @@ with tab4:
 with tab5:
 	st.header("Top 3 des pays qui ont gagné la finale avec au moins 3 buts d'écart")
 	big_wins = analysis.top_3_biggest_final_wins(df)
-	show_table_with_flags(big_wins, 'Winner')
-	col1, col2, col3 = st.columns([1,2,1])
+	col1, col2 = st.columns([1,2])
+	with col1:
+		show_table_with_flags(big_wins, 'Winner')
 	with col2:
 		fig = plotly_doughnut(big_wins.index, big_wins.values, title="Top 3 victoires 3+ buts")
 		st.plotly_chart(fig, width='content')
@@ -146,8 +151,9 @@ with tab5:
 with tab6:
 	st.header("Tout les pays qui ont gagné la finale sans aller en Penalty")
 	no_pen = analysis.top_win_no_penalty(df)
-	show_table_with_flags(no_pen, 'Winner')
-	col1, col2, col3 = st.columns([1,2,1])
+	col1, col2 = st.columns([1,2])
+	with col1:
+		show_table_with_flags(no_pen, 'Winner')
 	with col2:
 		fig = plotly_doughnut(no_pen.index, no_pen.values, title="Tout les pays qui ont gagné sans penalty")
 		st.plotly_chart(fig, width='content')
